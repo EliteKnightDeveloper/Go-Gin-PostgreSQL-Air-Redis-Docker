@@ -12,6 +12,11 @@ type Entry struct {
 	UserID  uint
 }
 
+type EntryModel struct {
+	gorm.Model
+	ID uint
+}
+
 func (entry *Entry) Save() (*Entry, error) {
 	err := database.Database.Create(&entry).Error
 	if err != nil {
@@ -20,26 +25,19 @@ func (entry *Entry) Save() (*Entry, error) {
 	return entry, nil
 }
 
-func (entry *Entry) Remove(id string) error {
-	var input Entry
-
-	result := database.Database.First(&input, id)
-	if result.Error == nil {
-		database.Database.Delete(&input, id)
+func (entryModel *EntryModel) Remove() error {
+	_, err := FindEntryById(uint(1))
+	if err != nil {
+		return err
 	}
-
-	return result.Error
+	return err
 }
 
-func (entry *Entry) Update(id string) (*Entry, error) {
-	var input Entry
-
-	result := database.Database.First(&input, id)
-	if result.Error == nil {
-		input.Content = entry.Content
-		database.Database.Save(&input)
-		return &input, nil
+func FindEntryById(entryId uint) (Entry, error) {
+	var entry Entry
+	err := database.Database.Where("ID=?", entryId).Find(&entry).Error
+	if err != nil {
+		return Entry{}, err
 	}
-
-	return &Entry{}, result.Error
+	return entry, nil
 }

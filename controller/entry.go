@@ -38,39 +38,6 @@ func AddEntry(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"data": savedEntry})
 }
 
-func RemoveEntry(context *gin.Context) {
-	id := context.Param("id")
-
-	var input model.Entry
-
-	err := input.Remove(id)
-
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	context.JSON(http.StatusCreated, gin.H{"data": err})
-}
-
-func UpdateEntry(context *gin.Context) {
-	id := context.Param("id")
-
-	var input model.Entry
-	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	entry, err := input.Update(id)
-
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	context.JSON(http.StatusCreated, gin.H{"data": entry})
-}
-
 func GetAllEntries(context *gin.Context) {
 	user, err := helper.CurrentUser(context)
 
