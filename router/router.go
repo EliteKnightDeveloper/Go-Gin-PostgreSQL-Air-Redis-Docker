@@ -4,8 +4,9 @@ import (
 	"GO-GIN-AIR-POSTGRESQL-DOCKER/controller"
 	"GO-GIN-AIR-POSTGRESQL-DOCKER/middleware"
 	"fmt"
-	"net/http"
 	"os"
+
+	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,9 +14,16 @@ import (
 func SeverApplication() {
 	router := gin.Default()
 
-	router.Use(corsMiddleware())
+	config := cors.DefaultConfig()
+	config.AllowCredentials = true
+	config.AllowOrigins = []string{
+		"http://localhost:8080",
+	}
+	config.AddAllowHeaders("Authorization")
+	router.Use(cors.New(config))
 
 	publicRoutes := router.Group("/auth")
+
 	publicRoutes.POST("/register", controller.Register)
 	publicRoutes.POST("/login", controller.Login)
 
@@ -23,46 +31,12 @@ func SeverApplication() {
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())
 	protectedRoutes.POST("/entry", controller.AddEntry)
 	protectedRoutes.GET("/entry", controller.GetAllEntries)
+	protectedRoutes.POST("/file", controller.UploadFile)
 
-	port := os.Getenv("DB_PORT")
+	port := os.Getenv("PORT")
 	address := fmt.Sprintf(":%s", port)
-
+	fmt.Println(address)
 	router.Run(address)
 
 	fmt.Println("Server running on port 8000")
-}
-
-func corsMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		allowedDomains := []string{"http://localhost:3000", "*"}
-
-		origin := c.Request.Header.Get("Origin")
-
-		allowed := false
-
-		for _, d := range allowedDomains {
-			if d == origin {
-				allowed = true
-				break
-			}
-		}
-
-		allowed = true
-
-		if allowed {
-			// c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-			c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, PUT, DELETE")
-			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-			if c.Request.Method == "OPTIONS" {
-				c.AbortWithStatus(204)
-				return
-			}
-
-			c.Next()
-		} else {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Origin not allowed"})
-		}
-	}
 }
