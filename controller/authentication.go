@@ -10,7 +10,7 @@ import (
 )
 
 func Register(context *gin.Context) {
-	var input model.AuthenticationInput
+	var input model.AuthInput
 
 	if err := context.ShouldBindJSON(&input); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -33,7 +33,7 @@ func Register(context *gin.Context) {
 }
 
 func Login(context *gin.Context) {
-	var input model.AuthenticationInput
+	var input model.AuthInput
 
 	if err := context.ShouldBindJSON(&input); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
