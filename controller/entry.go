@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddEntry(context *gin.Context) {
+func CreateEntry(context *gin.Context) {
 	var input model.Entry
 	if err := context.ShouldBindJSON(&input); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -36,6 +36,46 @@ func AddEntry(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusCreated, gin.H{"data": savedEntry})
+}
+
+func UpdateEntry(context *gin.Context) {
+	id := context.Param("id")
+
+	var input model.Entry
+
+	if err := context.ShouldBindJSON(&input); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	entry, err := input.Update(id)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusBadRequest, gin.H{"data": entry})
+
+}
+
+func RemoveEntry(context *gin.Context) {
+	id := context.Param("id")
+
+	var input model.Entry
+
+	if err := context.ShouldBindJSON(&input); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := input.Remove(id)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusBadRequest, gin.H{"data": "Successfully removed"})
 }
 
 func GetAllEntries(context *gin.Context) {

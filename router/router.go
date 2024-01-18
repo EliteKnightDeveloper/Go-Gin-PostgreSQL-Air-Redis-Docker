@@ -27,10 +27,12 @@ func SeverApplication() {
 	publicRoutes.POST("/register", controller.Register)
 	publicRoutes.POST("/login", controller.Login)
 
-	protectedRoutes := router.Group("/api")
+	protectedRoutes := router.Group("/api/v1")
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())
-	protectedRoutes.POST("/entry", controller.AddEntry)
+	protectedRoutes.POST("/entry", controller.CreateEntry)
 	protectedRoutes.GET("/entry", controller.GetAllEntries)
+	protectedRoutes.PUT("/entry/:id", controller.UpdateEntry)
+	protectedRoutes.DELETE("/entry/:id", controller.RemoveEntry)
 	protectedRoutes.POST("/file", controller.UploadFile)
 
 	port := os.Getenv("PORT")
