@@ -10,6 +10,18 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// @title           Go-Gin-PostgreSQL-Air
+// @version         1.0
+// @description     A CRUD boilerplate project in GO, Gin, PostgreSQL, Air framework.
+
+// @contact.name   Nguyen Hieu
+// @contact.email  trungquann411@gmail.com
+
+// @host      localhost:8000
+// @BasePath  /api/v1
+// @securitydefinitions.apikey ApiKeyAuth
+// @in       Header
+// @name      Authorization
 func main() {
 	loadEnv()
 	loadDatabase()

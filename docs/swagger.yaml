@@ -1,0 +1,207 @@
+basePath: /api/v1
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  model.Entry:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+    type: object
+  model.EntryInput:
+    properties:
+      content:
+        type: string
+    type: object
+  model.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      entries:
+        items:
+          $ref: '#/definitions/model.Entry'
+        type: array
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+  model.UserInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: trungquann411@gmail.com
+    name: Nguyen Hieu
+  description: A CRUD boilerplate project in GO, Gin, PostgreSQL, Air framework.
+  title: Go-Gin-PostgreSQL-Air
+  version: "1.0"
+paths:
+  /entry:
+    get:
+      description: Responds with the list of all entries as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Entry'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get entries array
+      tags:
+      - GetAllEntries
+    post:
+      consumes:
+      - application/json
+      description: Responds with the created entry as JSON.
+      parameters:
+      - description: Content of the entry
+        in: body
+        name: content
+        required: true
+        schema:
+          $ref: '#/definitions/model.EntryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Entry'
+      summary: Create a new entry
+      tags:
+      - createEntry
+  /entry/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Responds with the success or fail.
+      parameters:
+      - description: ID of the entry to be removed
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success":true,"message":"Entry removed successfully
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Remove a entry
+      tags:
+      - removeEntry
+    put:
+      consumes:
+      - application/json
+      description: Responds with the updated entry as JSON.
+      parameters:
+      - description: ID of the entry to be updated
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Content of the entry
+        in: body
+        name: content
+        required: true
+        schema:
+          $ref: '#/definitions/model.EntryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Entry'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a new entry
+      tags:
+      - updateEntry
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Responds with the token string.
+      parameters:
+      - description: Username and password
+        in: body
+        name: content
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login with username and password.
+      tags:
+      - Login
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Responds with the created user as JSON.
+      parameters:
+      - description: Username and password
+        in: body
+        name: content
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: Register a new user with username and password.
+      tags:
+      - Register
+securityDefinitions:
+  ApiKeyAuth:
+    in: Header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
