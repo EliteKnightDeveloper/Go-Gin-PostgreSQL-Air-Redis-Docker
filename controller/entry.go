@@ -21,6 +21,7 @@ import (
 // @Router       /entry [post]
 // @Param   content body model.EntryInput true "Content of the entry"
 // @Success      200  {object}  model.Entry
+// @Security ApiKeyAuth
 func CreateEntry(context *gin.Context) {
 	var input model.Entry
 	if err := context.ShouldBindJSON(&input); err != nil {
@@ -92,11 +93,6 @@ func RemoveEntry(context *gin.Context) {
 	id := context.Param("id")
 
 	var input model.Entry
-
-	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 
 	err := input.Remove(id)
 

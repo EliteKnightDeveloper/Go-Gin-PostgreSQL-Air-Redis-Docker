@@ -99,6 +99,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Entry'
+      security:
+      - ApiKeyAuth: []
       summary: Create a new entry
       tags:
       - createEntry

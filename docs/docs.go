@@ -46,6 +46,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Responds with the created entry as JSON.",
                 "consumes": [
                     "application/json"
