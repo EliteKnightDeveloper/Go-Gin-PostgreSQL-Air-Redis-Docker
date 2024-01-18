@@ -12,6 +12,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateEntry             godoc
+// @Summary      Create a new entry
+// @Description  Responds with the created entry as JSON.
+// @Tags         createEntry
+// @Accept json
+// @Produce      json
+// @Router       /entry [post]
+// @Param   content body model.EntryInput true "Content of the entry"
+// @Success      200  {object}  model.Entry
+// @Security ApiKeyAuth
 func CreateEntry(context *gin.Context) {
 	var input model.Entry
 	if err := context.ShouldBindJSON(&input); err != nil {
@@ -38,6 +48,17 @@ func CreateEntry(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"data": savedEntry})
 }
 
+// UpdateEntry             godoc
+// @Summary      Update a new entry
+// @Description  Responds with the updated entry as JSON.
+// @Tags         updateEntry
+// @Accept json
+// @Produce      json
+// @Router       /entry/{id} [put]
+// @Param   id path int true "ID of the entry to be updated"
+// @Param   content body model.EntryInput true "Content of the entry"
+// @Success      200  {object}  model.Entry
+// @Security ApiKeyAuth
 func UpdateEntry(context *gin.Context) {
 	id := context.Param("id")
 
@@ -58,15 +79,20 @@ func UpdateEntry(context *gin.Context) {
 
 }
 
+// RemoveEntry             godoc
+// @Summary      Remove a entry
+// @Description  Responds with the success or fail.
+// @Tags         removeEntry
+// @Accept json
+// @Produce      json
+// @Router       /entry/{id} [delete]
+// @Param   id path int true "ID of the entry to be removed"
+// @Success 200 {string} string "success":true,"message":"Entry removed successfully"
+// @Security ApiKeyAuth
 func RemoveEntry(context *gin.Context) {
 	id := context.Param("id")
 
 	var input model.Entry
-
-	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 
 	err := input.Remove(id)
 
@@ -78,6 +104,14 @@ func RemoveEntry(context *gin.Context) {
 	context.JSON(http.StatusBadRequest, gin.H{"data": "Successfully removed"})
 }
 
+// GetAllEntries             godoc
+// @Summary      Get entries array
+// @Description  Responds with the list of all entries as JSON.
+// @Tags         GetAllEntries
+// @Produce      json
+// @Router       /entry [get]
+// @Success      200  {array}  model.Entry
+// @Security ApiKeyAuth
 func GetAllEntries(context *gin.Context) {
 	user, err := helper.CurrentUser(context)
 

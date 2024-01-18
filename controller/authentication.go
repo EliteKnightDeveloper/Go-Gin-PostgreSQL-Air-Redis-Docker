@@ -9,8 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Register             godoc
+// @Summary      Register a new user with username and password.
+// @Description  Responds with the created user as JSON.
+// @Tags         Register
+// @Accept json
+// @Produce      json
+// @Router       /register [post]
+// @Param   content body model.UserInput true "Username and password"
+// @Success      200  {object} model.User
 func Register(context *gin.Context) {
-	var input model.AuthInput
+	var input model.UserInput
 
 	if err := context.ShouldBindJSON(&input); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -32,8 +41,17 @@ func Register(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"user": savedUser})
 }
 
+// Login             godoc
+// @Summary      Login with username and password.
+// @Description  Responds with the token string.
+// @Tags         Login
+// @Accept json
+// @Produce      json
+// @Router       /login [post]
+// @Param   content body model.UserInput true "Username and password"
+// @Success      200  {object} map[token]string
 func Login(context *gin.Context) {
-	var input model.AuthInput
+	var input model.UserInput
 
 	if err := context.ShouldBindJSON(&input); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

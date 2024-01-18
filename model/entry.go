@@ -12,6 +12,10 @@ type Entry struct {
 	UserID  uint
 }
 
+type EntryInput struct {
+	Content string `gorm:"type:text" json:"content"`
+}
+
 func (entry *Entry) Save() (*Entry, error) {
 	err := database.Database.Create(&entry).Error
 	if err != nil {

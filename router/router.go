@@ -6,9 +6,14 @@ import (
 	"fmt"
 	"os"
 
+	_ "GO-GIN-AIR-POSTGRESQL-DOCKER/docs"
+
 	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SeverApplication() {
@@ -17,12 +22,14 @@ func SeverApplication() {
 	config := cors.DefaultConfig()
 	config.AllowCredentials = true
 	config.AllowOrigins = []string{
-		"http://localhost:8080",
+		"http://localhost:8000",
 	}
 	config.AddAllowHeaders("Authorization")
 	router.Use(cors.New(config))
 
-	publicRoutes := router.Group("/auth")
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	publicRoutes := router.Group("/api/v1")
 
 	publicRoutes.POST("/register", controller.Register)
 	publicRoutes.POST("/login", controller.Login)
@@ -37,7 +44,6 @@ func SeverApplication() {
 
 	port := os.Getenv("PORT")
 	address := fmt.Sprintf(":%s", port)
-	fmt.Println(address)
 	router.Run(address)
 
 	fmt.Println("Server running on port 8000")
