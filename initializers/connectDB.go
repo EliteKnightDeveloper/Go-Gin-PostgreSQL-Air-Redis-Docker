@@ -1,6 +1,7 @@
 package initializers
 
 import (
+	"GO-GIN-AIR-POSTGRESQL-DOCKER/models"
 	"fmt"
 	"log"
 
@@ -19,4 +20,7 @@ func ConnectDB(config *Config) {
 		log.Fatal("Failed to connect to the Database")
 	}
 	fmt.Println("🚀 Connected Successfully to the Database")
+	DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
+	DB.AutoMigrate(&models.User{}, &models.Post{})
+	fmt.Println("👍 Migration complete")
 }

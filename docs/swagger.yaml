@@ -1,0 +1,250 @@
+definitions:
+  models.CreatePostRequest:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    required:
+    - content
+    - title
+    type: object
+  models.NewUserResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Post:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        type: string
+    type: object
+  models.SignInInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.SignUpInput:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  models.UpdatePost:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
+  models.UserResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: A CRUD boilerplate project in GO, Gin, PostgreSQL, Air framework.
+  title: Go-Gin-PostgreSQL-Air
+  version: "1.0"
+paths:
+  /api/v1/auth/login:
+    post:
+      description: Login with email and password
+      parameters:
+      - description: Email and Password
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+      summary: Login
+      tags:
+      - User
+  /api/v1/auth/logout:
+    get:
+      description: Logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Logout
+      tags:
+      - User
+  /api/v1/auth/refreshToken:
+    get:
+      description: RefreshToken
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: RefreshToken
+      tags:
+      - User
+  /api/v1/auth/register:
+    post:
+      description: Create a new user with name, email and password
+      parameters:
+      - description: Name, Email and Password
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignUpInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.NewUserResponse'
+      summary: Register a new user
+      tags:
+      - User
+  /api/v1/posts:
+    get:
+      description: Get post lists
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Post'
+            type: array
+      summary: Get post lists
+      tags:
+      - Post
+    post:
+      description: Create a new post with title and content
+      parameters:
+      - description: Title, Content
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Post'
+      summary: Create a new post
+      tags:
+      - Post
+  /api/v1/posts/{postId}:
+    delete:
+      description: Delete a post
+      parameters:
+      - description: ID of the entry to be deleted
+        in: path
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete a post
+      tags:
+      - Post
+    get:
+      description: Get a post
+      parameters:
+      - description: ID of the entry to be retrived
+        in: path
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get a post
+      tags:
+      - Post
+    put:
+      description: Update a post
+      parameters:
+      - description: Title, Content
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePost'
+      - description: ID of the entry to be updated
+        in: path
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Post'
+      summary: Update a post
+      tags:
+      - Post
+  /api/v1/users/me:
+    get:
+      description: GetCurrentUserInfo
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.NewUserResponse'
+      summary: GetCurrentUserInfo
+      tags:
+      - User
+swagger: "2.0"
