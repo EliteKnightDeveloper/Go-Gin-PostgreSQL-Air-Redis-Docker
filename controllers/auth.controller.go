@@ -22,7 +22,14 @@ func NewAuthController(DB *gorm.DB) AuthController {
 	return AuthController{DB}
 }
 
-// SignUp User
+// SignUpUser    godoc
+// @Summary      Register a new user
+// @Description	 Create a new user with name, email and password
+// @Tags         User
+// @Produce      json
+// @Param        user  body      models.SignUpInput  true  "Name, Email and Password"
+// @Success      200   {object}  models.NewUserResponse
+// @Router       /api/v1/auth/register [post]
 func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	var payload *models.SignUpInput
 
@@ -57,7 +64,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 		return
 	}
 
-	userResponse := &models.UserResponse{
+	userResponse := &models.NewUserResponse{
 		ID:        newUser.ID,
 		Name:      newUser.Name,
 		Email:     newUser.Email,
@@ -68,6 +75,14 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": gin.H{"user": userResponse}})
 }
 
+// SignInUser    godoc
+// @Summary      Login
+// @Description	 Login with email and password
+// @Tags         User
+// @Produce      json
+// @Param        User  body      models.SignInInput  true  "Email and Password"
+// @Success      200   {object} models.UserResponse
+// @Router       /api/v1/auth/login [post]
 func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	var payload *models.SignInInput
 
@@ -110,7 +125,13 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": access_token})
 }
 
-// Refresh Access Token
+// RefreshToken  godoc
+// @Summary      RefreshToken
+// @Description	 RefreshToken
+// @Tags         User
+// @Produce      json
+// @Success      200
+// @Router       /api/v1/auth/refreshToken [GET]
 func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 	message := "could not refresh access token"
 
@@ -148,6 +169,13 @@ func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": access_token})
 }
 
+// LogoutUser    godoc
+// @Summary      Logout
+// @Description	 Logout
+// @Tags         User
+// @Produce      json
+// @Success      200
+// @Router       /api/v1/auth/logout [GET]
 func (ac *AuthController) LogoutUser(ctx *gin.Context) {
 	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
 	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)

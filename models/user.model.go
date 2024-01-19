@@ -27,11 +27,15 @@ type SignInInput struct {
 	Password string `json:"password"  binding:"required"`
 }
 
-type UserResponse struct {
+type NewUserResponse struct {
 	ID        uuid.UUID `json:"id,omitempty"`
 	Name      string    `json:"name,omitempty"`
 	Email     string    `json:"email,omitempty"`
 	Role      string    `json:"role,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type UserResponse struct {
+	ACCESS_TOKEN string `json:"access_token"`
 }

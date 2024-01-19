@@ -17,10 +17,17 @@ func NewUserController(DB *gorm.DB) UserController {
 	return UserController{DB}
 }
 
+// GetCurrentUserInfo  godoc
+// @Summary      GetCurrentUserInfo
+// @Description	 GetCurrentUserInfo
+// @Tags         User
+// @Produce      json
+// @Success      200 {object}  models.NewUserResponse
+// @Router       /api/v1/users/me [GET]
 func (uc *UserController) GetMe(ctx *gin.Context) {
 	currentUser := ctx.MustGet("currentUser").(models.User)
 
-	userResponse := &models.UserResponse{
+	userResponse := &models.NewUserResponse{
 		ID:        currentUser.ID,
 		Name:      currentUser.Name,
 		Email:     currentUser.Email,

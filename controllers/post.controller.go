@@ -20,6 +20,14 @@ func NewPostController(DB *gorm.DB) PostController {
 	return PostController{DB}
 }
 
+// CreatePost    godoc
+// @Summary      Create a new post
+// @Description	 Create a new post with title and content
+// @Tags         Post
+// @Produce      json
+// @Param        post  body      models.CreatePostRequest  true  "Title, Content"
+// @Success      200   {object}  models.Post
+// @Router       /api/v1/posts [post]
 func (pc *PostController) CreatePost(ctx *gin.Context) {
 	currentUser := ctx.MustGet("currentUser").(models.User)
 	var payload *models.CreatePostRequest
@@ -51,6 +59,15 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": newPost})
 }
 
+// UpdatePost    godoc
+// @Summary      Update a post
+// @Description	 Update a post
+// @Tags         Post
+// @Produce      json
+// @Param        post  body      models.UpdatePost  true  "Title, Content"
+// @Param   		 postId path string true "ID of the entry to be updated"
+// @Success      200   {object}  models.Post
+// @Router       /api/v1/posts/{postId} [put]
 func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	postId := ctx.Param("postId")
 	currentUser := ctx.MustGet("currentUser").(models.User)
@@ -70,7 +87,6 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	postToUpdate := models.Post{
 		Title:     payload.Title,
 		Content:   payload.Content,
-		Image:     payload.Image,
 		User:      currentUser.ID,
 		CreatedAt: updatedPost.CreatedAt,
 		UpdatedAt: now,
@@ -81,6 +97,14 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": updatedPost})
 }
 
+// GetPost    	 godoc
+// @Summary      Get a post
+// @Description	 Get a post
+// @Tags         Post
+// @Produce      json
+// @Param   		 postId path string true "ID of the entry to be retrived"
+// @Success      200
+// @Router       /api/v1/posts/{postId} [get]
 func (pc *PostController) FindPostById(ctx *gin.Context) {
 	postId := ctx.Param("postId")
 
@@ -94,6 +118,13 @@ func (pc *PostController) FindPostById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": post})
 }
 
+// GetPosts    	 godoc
+// @Summary      Get post lists
+// @Description	 Get post lists
+// @Tags         Post
+// @Produce      json
+// @Success      200  {array}  models.Post
+// @Router       /api/v1/posts [get]
 func (pc *PostController) FindPosts(ctx *gin.Context) {
 	var page = ctx.DefaultQuery("page", "1")
 	var limit = ctx.DefaultQuery("limit", "10")
@@ -112,6 +143,14 @@ func (pc *PostController) FindPosts(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "results": len(posts), "data": posts})
 }
 
+// DeletePost    godoc
+// @Summary      Delete a post
+// @Description	 Delete a post
+// @Tags         Post
+// @Produce      json
+// @Param   	 	 postId path string true "ID of the entry to be deleted"
+// @Success      200
+// @Router       /api/v1/posts/{postId} [delete]
 func (pc *PostController) DeletePost(ctx *gin.Context) {
 	postId := ctx.Param("postId")
 
