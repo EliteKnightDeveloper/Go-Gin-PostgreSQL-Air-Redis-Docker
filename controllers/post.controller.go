@@ -105,7 +105,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 // @Param   		 postId path string true "ID of the entry to be retrived"
 // @Success      200
 // @Router       /api/v1/posts/{postId} [get]
-func (pc *PostController) FindPostById(ctx *gin.Context) {
+func (pc *PostController) GetPostById(ctx *gin.Context) {
 	postId := ctx.Param("postId")
 
 	var post models.Post
@@ -125,7 +125,7 @@ func (pc *PostController) FindPostById(ctx *gin.Context) {
 // @Produce      json
 // @Success      200  {array}  models.Post
 // @Router       /api/v1/posts [get]
-func (pc *PostController) FindPosts(ctx *gin.Context) {
+func (pc *PostController) GetPosts(ctx *gin.Context) {
 	var page = ctx.DefaultQuery("page", "1")
 	var limit = ctx.DefaultQuery("limit", "10")
 
