@@ -1,14 +1,20 @@
-FROM golang:1.16-alpine AS build
+# Go Version
+FROM golang:1.21-rc-alpine3.17
 
+# Environment variables which CompileDaemon requires to run
+ENV PROJECT_DIR=/app \
+    GO111MODULE=on \
+    CGO_ENABLED=0
+
+# Basic setup of the container
+RUN mkdir /app
+COPY .. /app
 WORKDIR /app
-COPY . .
 
-RUN go mod download
-RUN air
+# Get CompileDaemon
+RUN go get github.com/githubnemo/CompileDaemon
+RUN go install github.com/githubnemo/CompileDaemon
 
-FROM alpine:latest
-
-WORKDIR /app
-COPY --from=build /app/hello .
-
-CMD ["./hello"]
+# The build flag sets how to build after a change has been detected in the source code
+# The command flag sets how to run the app after it has been built
+ENTRYPOINT CompileDaemon -build="go build -o api" -command="./api"
