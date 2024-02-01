@@ -46,7 +46,6 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 
 	now := time.Now()
 	newUser := models.User{
-		Name:      payload.Name,
 		Email:     strings.ToLower(payload.Email),
 		Password:  hashedPassword,
 		Role:      "user",
@@ -66,7 +65,6 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 
 	userResponse := &models.NewUserResponse{
 		ID:        newUser.ID,
-		Name:      newUser.Name,
 		Email:     newUser.Email,
 		Role:      newUser.Role,
 		CreatedAt: newUser.CreatedAt,
@@ -113,14 +111,15 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	}
 
 	refresh_token, err := utils.CreateToken(config.RefreshTokenExpiresIn, user.ID, config.RefreshTokenPrivateKey)
+
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
 		return
 	}
 
+	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("refresh_token", refresh_token, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
-	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
 
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": access_token})
 }
