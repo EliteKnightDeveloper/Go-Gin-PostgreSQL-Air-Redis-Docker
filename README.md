@@ -43,6 +43,12 @@ github.com/golang-jwt/jwt/v4
 air
 ```
 
+## 👉 Documentation
+
+```
+http://localhost:8000/api/v1/docs/index.html
+```
+
 ## 👉 Signup as user
 
 ### Endpoint :
