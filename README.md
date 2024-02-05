@@ -1,4 +1,4 @@
-# Go-GinAirPostgreSQL-Docker-Starter
+# Go-Gin-Air-PostgreSQL-Redis-Docker-Starter
 
 This project is written purely in Go Language. Gin (Http Web Frame Work) is used in this project. PostgreSQL Database is used to manage the data.
 
@@ -150,17 +150,6 @@ HTTP Code: `200 OK`
 | ---------- | ------ | -------------------- |
 | `email`    | string | Email ID of the user |
 | `password` | string | Password of the user |
-
-### Example Request:
-
-```
- POST http://localhost:8000/user/register/validate
--H "Content-Type: application/json" \
--d '{
-      "email" : "tony@yopmail.com",
-      "password" :"12345"
-    }'
-```
 
 ### Success Response:
 
