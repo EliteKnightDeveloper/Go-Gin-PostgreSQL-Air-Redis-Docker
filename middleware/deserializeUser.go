@@ -45,7 +45,7 @@ func DeserializeUser() gin.HandlerFunc {
 			return
 		}
 
-		ctx.Set("currentUser", user)
+		ctx.Set("User", user)
 		ctx.Next()
 	}
 }
