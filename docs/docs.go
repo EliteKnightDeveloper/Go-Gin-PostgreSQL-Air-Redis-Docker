@@ -163,6 +163,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/posts/all": {
+            "get": {
+                "description": "Get all post lists",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get all post lists",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Post"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/posts/{postId}": {
             "get": {
                 "description": "Get a post",
@@ -298,9 +321,6 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
                 "role": {
                     "type": "string"
                 },
@@ -351,14 +371,10 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "name",
                 "password"
             ],
             "properties": {
                 "email": {
-                    "type": "string"
-                },
-                "name": {
                     "type": "string"
                 },
                 "password": {

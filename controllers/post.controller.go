@@ -28,7 +28,7 @@ func NewPostController(DB *gorm.DB) PostController {
 // @Success      200   {object}  models.Post
 // @Router       /api/v1/posts [post]
 func (pc *PostController) CreatePost(ctx *gin.Context) {
-	currentUser := ctx.MustGet("currentUser").(models.User)
+	User := ctx.MustGet("User").(models.User)
 	var payload *models.CreatePostRequest
 
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -40,7 +40,7 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 	newPost := models.Post{
 		Title:     payload.Title,
 		Content:   payload.Content,
-		User:      currentUser.ID,
+		User:      User.ID,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
@@ -66,10 +66,10 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 // @Success      200  {array}  models.Post
 // @Router       /api/v1/posts [get]
 func (pc *PostController) GetPosts(ctx *gin.Context) {
-	currentUser := ctx.MustGet("currentUser").(models.User)
+	User := ctx.MustGet("User").(models.User)
 
 	var posts []models.Post
-	results := pc.DB.Where("posts.user = ?", currentUser.ID).Find(&posts)
+	results := pc.DB.Where("posts.user = ?", User.ID).Find(&posts)
 	if results.Error != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": results.Error})
 		return
@@ -108,7 +108,7 @@ func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 // @Router       /api/v1/posts/{postId} [put]
 func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	postId := ctx.Param("postId")
-	currentUser := ctx.MustGet("currentUser").(models.User)
+	User := ctx.MustGet("User").(models.User)
 
 	var payload *models.UpdatePost
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -125,7 +125,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	postToUpdate := models.Post{
 		Title:     payload.Title,
 		Content:   payload.Content,
-		User:      currentUser.ID,
+		User:      User.ID,
 		CreatedAt: updatedPost.CreatedAt,
 		UpdatedAt: now,
 	}

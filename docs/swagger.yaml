@@ -17,8 +17,6 @@ definitions:
         type: string
       id:
         type: string
-      name:
-        type: string
       role:
         type: string
       updated_at:
@@ -53,14 +51,11 @@ definitions:
     properties:
       email:
         type: string
-      name:
-        type: string
       password:
         minLength: 8
         type: string
     required:
     - email
-    - name
     - password
     type: object
   models.UpdatePost:
@@ -232,6 +227,21 @@ paths:
           schema:
             $ref: '#/definitions/models.Post'
       summary: Update a post
+      tags:
+      - Post
+  /api/v1/posts/all:
+    get:
+      description: Get all post lists
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Post'
+            type: array
+      summary: Get all post lists
       tags:
       - Post
   /api/v1/users/me:
