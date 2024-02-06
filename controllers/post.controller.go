@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -29,6 +30,7 @@ func NewPostController(DB *gorm.DB) PostController {
 // @Router       /api/v1/posts [post]
 func (pc *PostController) CreatePost(ctx *gin.Context) {
 	User := ctx.MustGet("User").(models.User)
+
 	var payload *models.CreatePostRequest
 
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -59,8 +61,8 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 }
 
 // GetPosts    	 godoc
-// @Summary      Get post lists
-// @Description	 Get post lists
+// @Summary      Get post lists with user info
+// @Description	 Get post lists with user info
 // @Tags         Post
 // @Produce      json
 // @Success      200  {array}  models.Post
@@ -68,33 +70,39 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 func (pc *PostController) GetPosts(ctx *gin.Context) {
 	User := ctx.MustGet("User").(models.User)
 
-	var posts []models.Post
-	results := pc.DB.Where("posts.user = ?", User.ID).Find(&posts)
+	size, _ := strconv.Atoi(ctx.Query("size"))
+	page, _ := strconv.Atoi(ctx.Query("page"))
+
+	var postList []models.PostList
+	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.created_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Where("posts.user = ?", User.ID).Offset((page - 1) * size).Limit(size).Order("created_at").Scan(&postList)
 	if results.Error != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": results.Error})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "results": len(posts), "data": posts})
+	ctx.JSON(http.StatusOK, gin.H{"status": "success", "results": len(postList), "data": postList})
 }
 
 // GetPosts    	 godoc
-// @Summary      Get all post lists
-// @Description	 Get all post lists
+// @Summary      Get all post lists with user info
+// @Description	 Get all post lists with user info
 // @Tags         Post
 // @Produce      json
 // @Success      200  {array}  models.Post
 // @Router       /api/v1/posts/all [get]
 func (pc *PostController) GetAllPosts(ctx *gin.Context) {
-	var posts []models.Post
+	size, _ := strconv.Atoi(ctx.Query("size"))
+	page, _ := strconv.Atoi(ctx.Query("page"))
 
-	results := pc.DB.Find(&posts)
+	var postList []models.PostList
+	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.created_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Offset((page - 1) * size).Limit(size).Order("created_at").Scan(&postList)
+
 	if results.Error != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": results.Error})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "results": len(posts), "data": posts})
+	ctx.JSON(http.StatusOK, gin.H{"status": "success", "results": len(postList), "data": postList})
 }
 
 // UpdatePost    godoc

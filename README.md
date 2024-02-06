@@ -84,51 +84,8 @@ http://localhost:8000/api/v1/auth/register
 
 HTTP Code: `200 OK`
 
-```
-{
-  "message": "Go to /register/validate"
-}
-```
-
-## 👉 To verify the otp
-
-### Endpoint :
-
-```
-http://localhost:8000/user/register/validate
-```
-
-### Method:
-
-`POST`
-
-### Request Body:
-
-### Request Body:
-
-| Parameter | Type    | Description       |
-| --------- | ------- | ----------------- |
-| `otp`     | Intiger | Otp of the user   |
-| `email`   | string  | Email of the user |
-
-### Example Request:
-
-```
- POST  http://localhost:8000/user/register/validate
--H "Content-Type: application/json" \
--d '{
-       "otp" : "1904",
-       "email" : "tony@yopmail.com"
-    }'
-```
-
-### Success Response:
-
-HTTP Code: `200 OK`
-
-```
-{
-  "Message": "New User Successfully Registered"
+```{
+  "message": "User successfully registered."
 }
 ```
 
