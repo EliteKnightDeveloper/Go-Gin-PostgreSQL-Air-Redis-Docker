@@ -140,7 +140,7 @@ paths:
       - User
   /api/v1/posts:
     get:
-      description: Get post lists
+      description: Get post lists with user info
       produces:
       - application/json
       responses:
@@ -150,7 +150,7 @@ paths:
             items:
               $ref: '#/definitions/models.Post'
             type: array
-      summary: Get post lists
+      summary: Get post lists with user info
       tags:
       - Post
     post:
@@ -231,7 +231,7 @@ paths:
       - Post
   /api/v1/posts/all:
     get:
-      description: Get all post lists
+      description: Get all post lists with user info
       produces:
       - application/json
       responses:
@@ -241,7 +241,7 @@ paths:
             items:
               $ref: '#/definitions/models.Post'
             type: array
-      summary: Get all post lists
+      summary: Get all post lists with user info
       tags:
       - Post
   /api/v1/users/me:

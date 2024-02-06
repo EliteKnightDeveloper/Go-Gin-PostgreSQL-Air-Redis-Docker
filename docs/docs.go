@@ -113,14 +113,14 @@ const docTemplate = `{
         },
         "/api/v1/posts": {
             "get": {
-                "description": "Get post lists",
+                "description": "Get post lists with user info",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Post"
                 ],
-                "summary": "Get post lists",
+                "summary": "Get post lists with user info",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -165,14 +165,14 @@ const docTemplate = `{
         },
         "/api/v1/posts/all": {
             "get": {
-                "description": "Get all post lists",
+                "description": "Get all post lists with user info",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Post"
                 ],
-                "summary": "Get all post lists",
+                "summary": "Get all post lists with user info",
                 "responses": {
                     "200": {
                         "description": "OK",
