@@ -74,7 +74,7 @@ func (pc *PostController) GetPosts(ctx *gin.Context) {
 	page, _ := strconv.Atoi(ctx.Query("page"))
 
 	var postList []models.PostList
-	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.created_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Where("posts.user = ?", User.ID).Offset((page - 1) * size).Limit(size).Order("created_at").Scan(&postList)
+	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.updated_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Where("posts.user = ?", User.ID).Offset((page - 1) * size).Limit(size).Order("updated_at").Scan(&postList)
 	if results.Error != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": results.Error})
 		return
@@ -95,7 +95,7 @@ func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 	page, _ := strconv.Atoi(ctx.Query("page"))
 
 	var postList []models.PostList
-	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.created_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Offset((page - 1) * size).Limit(size).Order("created_at").Scan(&postList)
+	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.updated_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Offset((page - 1) * size).Limit(size).Order("updated_at").Scan(&postList)
 
 	if results.Error != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": results.Error})

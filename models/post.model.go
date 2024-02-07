@@ -26,9 +26,10 @@ type UpdatePost struct {
 }
 
 type PostList struct {
-	ID      uuid.UUID `json:"ID"`
-	Title   string    `json:"title,omitempty"`
-	Content string    `json:"content,omitempty"`
-	Email   string    `json:"email,omitempty"`
-	User    string    `json:"user,omitempty"`
+	ID        uuid.UUID `json:"ID"`
+	Title     string    `json:"title,omitempty"`
+	Content   string    `json:"content,omitempty"`
+	Email     string    `json:"email,omitempty"`
+	User      string    `json:"user,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
