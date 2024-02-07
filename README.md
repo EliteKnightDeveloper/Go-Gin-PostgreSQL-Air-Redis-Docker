@@ -108,6 +108,18 @@ HTTP Code: `200 OK`
 | `email`    | string | Email ID of the user |
 | `password` | string | Password of the user |
 
+### Example Request:
+
+```
+ POST   http://localhost:8000/api/v1/auth/login
+
+-H "Content-Type: application/json"
+-d '{
+    "email" : "tony@yopmail.com",
+    "password" : "12345",
+}'
+```
+
 ### Success Response:
 
 HTTP Code: `200 OK`

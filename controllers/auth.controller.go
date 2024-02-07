@@ -96,6 +96,11 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 		return
 	}
 
+	if !user.Status {
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Disabled User"})
+		return
+	}
+
 	if err := utils.VerifyPassword(user.Password, payload.Password); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
 		return

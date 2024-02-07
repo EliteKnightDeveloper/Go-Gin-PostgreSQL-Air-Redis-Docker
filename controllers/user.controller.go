@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"GO-GIN-AIR-POSTGRESQL-DOCKER/models"
 
@@ -36,4 +37,46 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": gin.H{"user": userResponse}})
+}
+
+func (uc *UserController) ApproveUser(ctx *gin.Context) {
+	userId := ctx.Param("userId")
+
+	var user models.User
+	result := uc.DB.First(&user, "id=?", userId)
+	if result.Error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"status": "fail", "message": "No user with this id"})
+		return
+	}
+
+	now := time.Now()
+	userToUpdate := models.User{
+		UpdatedAt: now,
+		Status:    true,
+	}
+
+	uc.DB.Model(&user).Updates(userToUpdate)
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
+func (uc *UserController) DisableUser(ctx *gin.Context) {
+	userId := ctx.Param("userId")
+
+	var user models.User
+	result := uc.DB.First(&user, "id=?", userId)
+	if result.Error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"status": "fail", "message": "No user with this id"})
+		return
+	}
+
+	now := time.Now()
+	userToUpdate := models.User{
+		UpdatedAt: now,
+		Status:    false,
+	}
+
+	uc.DB.Model(&user).Updates(userToUpdate)
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
 }
