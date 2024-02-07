@@ -19,4 +19,6 @@ func (uc *UserRouteController) UserRoute(rg *gin.RouterGroup) {
 	router := rg.Group("users")
 
 	router.GET("/me", middleware.DeserializeUser(), uc.userController.GetMe)
+	router.POST("/approve/:userId", middleware.DeserializeUser(), middleware.Permission(), uc.userController.ApproveUser)
+	router.POST("/disable/:userId", middleware.DeserializeUser(), middleware.Permission(), uc.userController.DisableUser)
 }

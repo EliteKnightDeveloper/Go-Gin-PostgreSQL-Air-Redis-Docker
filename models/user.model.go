@@ -13,6 +13,7 @@ type User struct {
 	Role      string    `gorm:"type:varchar(255);not null"`
 	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time `gorm:"not null"`
+	Status    bool      `gorm:"default:false"`
 }
 
 type SignUpInput struct {
