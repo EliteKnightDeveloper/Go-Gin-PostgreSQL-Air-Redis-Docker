@@ -15,7 +15,7 @@ import (
 func DeserializeUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var access_token string
-		cookie, err := ctx.Cookie("access_token")
+		cookie, err := ctx.Cookie("Access_token")
 
 		authorizationHeader := ctx.Request.Header.Get("Authorization")
 		fields := strings.Fields(authorizationHeader)
@@ -41,7 +41,7 @@ func DeserializeUser() gin.HandlerFunc {
 		var user models.User
 		result := initializers.DB.First(&user, "id = ?", fmt.Sprint(sub))
 		if result.Error != nil {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "the user belonging to this token no logger exists"})
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "The user belonging to this token no logger exists"})
 			return
 		}
 

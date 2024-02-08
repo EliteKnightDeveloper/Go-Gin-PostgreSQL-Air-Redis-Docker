@@ -80,7 +80,15 @@ func (pc *PostController) GetPosts(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"total": len(postList), "page": len(postList) / size, "data": postList})
+	var pageSize = 0
+
+	if len(postList)/size == 0 {
+		pageSize = 1
+	} else {
+		pageSize = len(postList) / size
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"total": len(postList), "page": pageSize, "data": postList})
 }
 
 // GetPosts    	 godoc
@@ -102,7 +110,15 @@ func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"total": len(postList), "page": len(postList) / size, "data": postList})
+	var pageSize = 0
+
+	if len(postList)/size == 0 {
+		pageSize = 1
+	} else {
+		pageSize = len(postList) / size
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"total": len(postList), "page": pageSize, "data": postList})
 }
 
 // UpdatePost    godoc
@@ -126,7 +142,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	var updatedPost models.Post
 	result := pc.DB.First(&updatedPost, "id = ?", postId)
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that title exists"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that Id exists"})
 		return
 	}
 	now := time.Now()
@@ -157,7 +173,7 @@ func (pc *PostController) GetPostById(ctx *gin.Context) {
 	var post models.Post
 	result := pc.DB.First(&post, "id = ?", postId)
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that title exists"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that Id exists"})
 		return
 	}
 
@@ -178,7 +194,7 @@ func (pc *PostController) DeletePost(ctx *gin.Context) {
 	result := pc.DB.Delete(&models.Post{}, "id = ?", postId)
 
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that title exists"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that Id exists"})
 		return
 	}
 

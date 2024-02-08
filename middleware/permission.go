@@ -12,7 +12,7 @@ func Permission() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		User := ctx.MustGet("User").(models.User)
 
-		if User.Role == "admin" {
+		if User.Role == "Admin" {
 			ctx.Next()
 		} else {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Permission Denied"})
