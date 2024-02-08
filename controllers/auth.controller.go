@@ -48,7 +48,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	newUser := models.User{
 		Email:     strings.ToLower(payload.Email),
 		Password:  hashedPassword,
-		Role:      "user",
+		Role:      "User",
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
@@ -122,11 +122,11 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, true)
-	ctx.SetCookie("access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
-	ctx.SetCookie("refresh_token", refresh_token, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
+	ctx.SetCookie("Logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, true)
+	ctx.SetCookie("Access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
+	ctx.SetCookie("Refresh_token", refresh_token, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
 
-	ctx.JSON(http.StatusOK, gin.H{"access_token": access_token})
+	ctx.JSON(http.StatusOK, gin.H{"Access_token": access_token})
 }
 
 // RefreshToken  godoc
@@ -137,9 +137,9 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 // @Success      200
 // @Router       /api/v1/auth/refreshToken [GET]
 func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
-	message := "could not refresh access token"
+	message := "Could not refresh access token"
 
-	cookie, err := ctx.Cookie("refresh_token")
+	cookie, err := ctx.Cookie("Refresh_token")
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": message})
@@ -157,7 +157,7 @@ func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 	var user models.User
 	result := ac.DB.First(&user, "id = ?", fmt.Sprint(sub))
 	if result.Error != nil {
-		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "the user belonging to this token no logger exists"})
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "The user belonging to this token no logger exists"})
 		return
 	}
 
@@ -167,10 +167,10 @@ func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 		return
 	}
 
-	ctx.SetCookie("access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
-	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
+	ctx.SetCookie("Access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
+	ctx.SetCookie("Logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
 
-	ctx.JSON(http.StatusOK, gin.H{"access_token": access_token})
+	ctx.JSON(http.StatusOK, gin.H{"Access_token": access_token})
 }
 
 // LogoutUser    godoc
@@ -181,9 +181,9 @@ func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 // @Success      200
 // @Router       /api/v1/auth/logout [GET]
 func (ac *AuthController) LogoutUser(ctx *gin.Context) {
-	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
-	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
-	ctx.SetCookie("logged_in", "", -1, "/", "localhost", false, false)
+	ctx.SetCookie("Access_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("Refresh_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("Logged_in", "", -1, "/", "localhost", false, false)
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Logout Success"})
 }

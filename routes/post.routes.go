@@ -23,7 +23,7 @@ func (pc *PostRouteController) PostRoute(rg *gin.RouterGroup) {
 	router.POST("/", pc.postController.CreatePost)
 	router.GET("/all", pc.postController.GetAllPosts)
 	router.GET("/", pc.postController.GetPosts)
-	router.PUT("/:postId", middleware.Permission(), pc.postController.UpdatePost)
+	router.PUT("/:postId", pc.postController.UpdatePost)
 	router.GET("/:postId", pc.postController.GetPostById)
 	router.DELETE("/:postId", middleware.Permission(), pc.postController.DeletePost)
 }
