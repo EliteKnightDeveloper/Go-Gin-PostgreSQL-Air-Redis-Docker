@@ -36,7 +36,7 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 		UpdatedAt: User.UpdatedAt,
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": gin.H{"user": userResponse}})
+	ctx.JSON(http.StatusOK, gin.H{"data": gin.H{"user": userResponse}})
 }
 
 func (uc *UserController) ApproveUser(ctx *gin.Context) {
@@ -45,7 +45,7 @@ func (uc *UserController) ApproveUser(ctx *gin.Context) {
 	var user models.User
 	result := uc.DB.First(&user, "id=?", userId)
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "fail", "message": "No user with this id"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No user with this id"})
 		return
 	}
 
@@ -57,7 +57,7 @@ func (uc *UserController) ApproveUser(ctx *gin.Context) {
 
 	uc.DB.Model(&user).Updates(userToUpdate)
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "User Approve Success"})
 }
 
 func (uc *UserController) DisableUser(ctx *gin.Context) {
@@ -66,7 +66,7 @@ func (uc *UserController) DisableUser(ctx *gin.Context) {
 	var user models.User
 	result := uc.DB.First(&user, "id=?", userId)
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "fail", "message": "No user with this id"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No user with this id"})
 		return
 	}
 
@@ -78,5 +78,5 @@ func (uc *UserController) DisableUser(ctx *gin.Context) {
 
 	uc.DB.Model(&user).Updates(userToUpdate)
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "User Disabled Success"})
 }

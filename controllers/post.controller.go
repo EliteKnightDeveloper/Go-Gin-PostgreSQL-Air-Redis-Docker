@@ -50,14 +50,14 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 	result := pc.DB.Create(&newPost)
 	if result.Error != nil {
 		if strings.Contains(result.Error.Error(), "duplicate key") {
-			ctx.JSON(http.StatusConflict, gin.H{"status": "fail", "message": "Post with that title already exists"})
+			ctx.JSON(http.StatusConflict, gin.H{"message": "Post with that title already exists"})
 			return
 		}
-		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": result.Error.Error()})
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": result.Error.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": newPost})
+	ctx.JSON(http.StatusCreated, gin.H{"data": newPost})
 }
 
 // GetPosts    	 godoc
@@ -76,11 +76,11 @@ func (pc *PostController) GetPosts(ctx *gin.Context) {
 	var postList []models.PostList
 	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.updated_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Where("posts.user = ?", User.ID).Offset((page - 1) * size).Limit(size).Order("updated_at").Scan(&postList)
 	if results.Error != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": results.Error})
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": results.Error})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "results": len(postList), "data": postList})
+	ctx.JSON(http.StatusOK, gin.H{"total": len(postList), "page": len(postList) / size, "data": postList})
 }
 
 // GetPosts    	 godoc
@@ -98,11 +98,11 @@ func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.updated_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Offset((page - 1) * size).Limit(size).Order("updated_at").Scan(&postList)
 
 	if results.Error != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": results.Error})
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": results.Error})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "results": len(postList), "data": postList})
+	ctx.JSON(http.StatusOK, gin.H{"total": len(postList), "page": len(postList) / size, "data": postList})
 }
 
 // UpdatePost    godoc
@@ -120,13 +120,13 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 
 	var payload *models.UpdatePost
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
 		return
 	}
 	var updatedPost models.Post
 	result := pc.DB.First(&updatedPost, "id = ?", postId)
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "fail", "message": "No post with that title exists"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that title exists"})
 		return
 	}
 	now := time.Now()
@@ -140,7 +140,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 
 	pc.DB.Model(&updatedPost).Updates(postToUpdate)
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": updatedPost})
+	ctx.JSON(http.StatusOK, gin.H{"data": updatedPost})
 }
 
 // GetPost    	 godoc
@@ -157,11 +157,11 @@ func (pc *PostController) GetPostById(ctx *gin.Context) {
 	var post models.Post
 	result := pc.DB.First(&post, "id = ?", postId)
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "fail", "message": "No post with that title exists"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that title exists"})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": post})
+	ctx.JSON(http.StatusOK, gin.H{"data": post})
 }
 
 // DeletePost    godoc
@@ -178,7 +178,7 @@ func (pc *PostController) DeletePost(ctx *gin.Context) {
 	result := pc.DB.Delete(&models.Post{}, "id = ?", postId)
 
 	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "fail", "message": "No post with that title exists"})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "No post with that title exists"})
 		return
 	}
 

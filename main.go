@@ -67,7 +67,7 @@ func main() {
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		message := "Welcome to Golang with Gorm and Postgres"
-		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": message})
+		ctx.JSON(http.StatusOK, gin.H{"message": message})
 	})
 
 	AuthRouteController.AuthRoute(router)
