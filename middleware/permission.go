@@ -15,7 +15,7 @@ func Permission() gin.HandlerFunc {
 		if User.Role == "admin" {
 			ctx.Next()
 		} else {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "Permission Denied"})
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Permission Denied"})
 			return
 		}
 
