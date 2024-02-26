@@ -40,7 +40,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 
 	hashedPassword, err := utils.HashPassword(payload.Password)
 	if err != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -59,7 +59,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusConflict, gin.H{"message": "User with that email already exists"})
 		return
 	} else if result.Error != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"message": "Something bad happened"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Something bad happened"})
 		return
 	}
 
