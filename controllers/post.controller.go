@@ -53,7 +53,7 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 			ctx.JSON(http.StatusConflict, gin.H{"message": "Post with that title already exists"})
 			return
 		}
-		ctx.JSON(http.StatusBadGateway, gin.H{"message": result.Error.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": result.Error.Error()})
 		return
 	}
 
@@ -76,7 +76,7 @@ func (pc *PostController) GetPosts(ctx *gin.Context) {
 	var postList []models.PostList
 	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.updated_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Where("posts.user = ?", User.ID).Offset((page - 1) * size).Limit(size).Order("updated_at").Scan(&postList)
 	if results.Error != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"message": results.Error})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": results.Error})
 		return
 	}
 
@@ -99,14 +99,22 @@ func (pc *PostController) GetPosts(ctx *gin.Context) {
 // @Success      200  {array}  models.Post
 // @Router       /api/v1/posts/all [get]
 func (pc *PostController) GetAllPosts(ctx *gin.Context) {
-	size, _ := strconv.Atoi(ctx.Query("size"))
-	page, _ := strconv.Atoi(ctx.Query("page"))
+	size, err := strconv.Atoi(ctx.Query("size"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page size is not provided."})
+		return
+	}
+	page, err := strconv.Atoi(ctx.Query("page"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page number is not provided."})
+		return
+	}
 
 	var postList []models.PostList
 	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.updated_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Offset((page - 1) * size).Limit(size).Order("updated_at").Scan(&postList)
 
 	if results.Error != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"message": results.Error})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": results.Error})
 		return
 	}
 
