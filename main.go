@@ -48,7 +48,7 @@ func init() {
 	server = gin.Default()
 }
 
-// @title           Go-Gin-PostgreSQL-Air
+// @title           Go-Gin-Air-PostgreSQL-Docker-Redis
 // @version         1.0
 // @description     A CRUD boilerplate project in GO, Gin, PostgreSQL, Air framework.
 func main() {

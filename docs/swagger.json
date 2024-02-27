@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "A CRUD boilerplate project in GO, Gin, PostgreSQL, Air framework.",
-        "title": "Go-Gin-PostgreSQL-Air",
+        "title": "Go-Gin-Air-PostgreSQL-Docker-Redis",
         "contact": {},
         "version": "1.0"
     },

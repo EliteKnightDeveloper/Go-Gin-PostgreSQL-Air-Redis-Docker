@@ -73,7 +73,7 @@ definitions:
 info:
   contact: {}
   description: A CRUD boilerplate project in GO, Gin, PostgreSQL, Air framework.
-  title: Go-Gin-PostgreSQL-Air
+  title: Go-Gin-Air-PostgreSQL-Docker-Redis
   version: "1.0"
 paths:
   /api/v1/auth/login:

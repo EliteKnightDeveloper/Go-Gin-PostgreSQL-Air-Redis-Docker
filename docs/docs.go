@@ -463,7 +463,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Go-Gin-PostgreSQL-Air",
+	Title:            "Go-Gin-Air-PostgreSQL-Docker-Redis",
 	Description:      "A CRUD boilerplate project in GO, Gin, PostgreSQL, Air framework.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
