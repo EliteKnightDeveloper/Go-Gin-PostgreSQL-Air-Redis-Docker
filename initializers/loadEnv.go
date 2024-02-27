@@ -24,6 +24,11 @@ type Config struct {
 	RefreshTokenExpiresIn  time.Duration `mapstructure:"REFRESH_TOKEN_EXPIRED_IN"`
 	AccessTokenMaxAge      int           `mapstructure:"ACCESS_TOKEN_MAXAGE"`
 	RefreshTokenMaxAge     int           `mapstructure:"REFRESH_TOKEN_MAXAGE"`
+
+	CloudName string `mapstructure:"CLOUDINARY_CLOUD_NAME"`
+	APIKey    string `mapstructure:"CLOUDINARY_API_KEY"`
+	APISecret string `mapstructure:"CLOUDINARY_API_SECRET"`
+	Folder    string `mapstructure:"CLOUDINARY_UPLOAD_FOLDER"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

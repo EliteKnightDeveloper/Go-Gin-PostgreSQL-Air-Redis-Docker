@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"GO-GIN-AIR-POSTGRESQL-DOCKER/models"
+	"GO-GIN-AIR-POSTGRESQL-DOCKER/services"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -31,6 +32,17 @@ func NewPostController(DB *gorm.DB) PostController {
 func (pc *PostController) CreatePost(ctx *gin.Context) {
 	User := ctx.MustGet("User").(models.User)
 
+	formfile, _, err := ctx.Request.FormFile("file")
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "File is not provided."})
+		return
+	}
+	uploadUrl, err := services.NewMediaUpload().FileUpload(models.File{File: formfile})
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "File upload is failed."})
+		return
+	}
+
 	var payload *models.CreatePostRequest
 
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -45,6 +57,7 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 		User:      User.ID,
 		CreatedAt: now,
 		UpdatedAt: now,
+		File:      uploadUrl,
 	}
 
 	result := pc.DB.Create(&newPost)

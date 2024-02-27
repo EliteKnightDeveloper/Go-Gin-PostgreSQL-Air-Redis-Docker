@@ -13,6 +13,7 @@ type Post struct {
 	User      uuid.UUID `gorm:"type:uuid not null" json:"user,omitempty"`
 	CreatedAt time.Time `gorm:"not null" json:"created_at,omitempty"`
 	UpdatedAt time.Time `gorm:"not null" json:"updated_at,omitempty"`
+	File      string    `gorm:"not null" json:"file,omitempty"`
 }
 
 type CreatePostRequest struct {
