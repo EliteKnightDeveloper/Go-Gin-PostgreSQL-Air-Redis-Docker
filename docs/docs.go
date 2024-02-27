@@ -272,6 +272,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/users/approve/{userId}": {
+            "post": {
+                "description": "ApproveUser",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "ApproveUser",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the user to be approved",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/users/disable/{userId}": {
+            "post": {
+                "description": "DisableUser",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "DisableUser",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the user to be disabled",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/v1/users/me": {
             "get": {
                 "description": "GetCurrentUserInfo",

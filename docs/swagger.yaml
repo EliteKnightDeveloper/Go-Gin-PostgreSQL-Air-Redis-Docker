@@ -244,6 +244,40 @@ paths:
       summary: Get all post lists with user info
       tags:
       - Post
+  /api/v1/users/approve/{userId}:
+    post:
+      description: ApproveUser
+      parameters:
+      - description: ID of the user to be approved
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: ApproveUser
+      tags:
+      - User
+  /api/v1/users/disable/{userId}:
+    post:
+      description: DisableUser
+      parameters:
+      - description: ID of the user to be disabled
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: DisableUser
+      tags:
+      - User
   /api/v1/users/me:
     get:
       description: GetCurrentUserInfo

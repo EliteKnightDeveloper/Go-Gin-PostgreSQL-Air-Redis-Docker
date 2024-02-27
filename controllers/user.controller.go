@@ -39,6 +39,14 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": gin.H{"user": userResponse}})
 }
 
+// ApproveUser	 godoc
+// @Summary      ApproveUser
+// @Description	 ApproveUser
+// @Tags         User
+// @Produce      json
+// @Param   	 userId path string true "ID of the user to be approved"
+// @Success      200
+// @Router       /api/v1/users/approve/{userId} [POST]
 func (uc *UserController) ApproveUser(ctx *gin.Context) {
 	userId := ctx.Param("userId")
 
@@ -60,6 +68,14 @@ func (uc *UserController) ApproveUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "User Approve Success"})
 }
 
+// DisableUser	 godoc
+// @Summary      DisableUser
+// @Description	 DisableUser
+// @Tags         User
+// @Produce      json
+// @Param   	 userId path string true "ID of the user to be disabled"
+// @Success      200
+// @Router       /api/v1/users/disable/{userId} [POST]
 func (uc *UserController) DisableUser(ctx *gin.Context) {
 	userId := ctx.Param("userId")
 
