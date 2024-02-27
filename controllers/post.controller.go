@@ -135,7 +135,7 @@ func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 // @Tags         Post
 // @Produce      json
 // @Param        post  body      models.UpdatePost  true  "Title, Content"
-// @Param   		 postId path string true "ID of the entry to be updated"
+// @Param   	 postId path string true "ID of the entry to be updated"
 // @Success      200   {object}  models.Post
 // @Router       /api/v1/posts/{postId} [put]
 func (pc *PostController) UpdatePost(ctx *gin.Context) {
@@ -144,7 +144,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 
 	var payload *models.UpdatePost
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	var updatedPost models.Post
