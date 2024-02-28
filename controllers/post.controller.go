@@ -21,12 +21,13 @@ func NewPostController(DB *gorm.DB) PostController {
 	return PostController{DB}
 }
 
-// CreatePost    godoc
+// CreatePost godoc
 // @Summary      Create a new post
-// @Description	 Create a new post with title and content
+// @Description  Create a new post with title and content
 // @Tags         Post
 // @Produce      json
-// @Param        post  body      models.CreatePostRequest  true  "Title, Content"
+// @Param        post  body models.CreatePost true "Title, Content"
+// @Param        file formData file true "File"
 // @Success      200   {object}  models.Post
 // @Router       /api/v1/posts [post]
 func (pc *PostController) CreatePost(ctx *gin.Context) {
@@ -43,19 +44,16 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 		return
 	}
 
-	content := ctx.Query("content")
-	if content == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Content is not provided."})
-	}
-	title := ctx.Query("title")
-	if title == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Title is not provided."})
+	var payload *models.CreatePost
+	if err := ctx.ShouldBindJSON(&payload); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
 	}
 
 	now := time.Now()
 	newPost := models.Post{
-		Title:     content,
-		Content:   title,
+		Title:     payload.Content,
+		Content:   payload.Title,
 		User:      user.ID,
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -64,7 +62,7 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 
 	result := pc.DB.Create(&newPost)
 	if result.Error != nil {
-		if strings.Contains(result.Error.Error(), "duplicate key") {
+		if strings.Contains(result.Error.Error(), "Duplicate key") {
 			ctx.JSON(http.StatusConflict, gin.H{"message": "Post with that title already exists"})
 			return
 		}
@@ -161,9 +159,9 @@ func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 // @Description	 Update a post
 // @Tags         Post
 // @Produce      json
-// @Param        post  body      models.UpdatePost  true  "Title, Content"
+// @Param        post body models.UpdatePost true "Title, Content"
 // @Param   	 postId path string true "ID of the entry to be updated"
-// @Success      200   {object}  models.Post
+// @Success      200 {object} models.Post
 // @Router       /api/v1/posts/{postId} [put]
 func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	postId := ctx.Param("postId")

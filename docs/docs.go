@@ -165,8 +165,15 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreatePostRequest"
+                            "$ref": "#/definitions/models.CreatePost"
                         }
+                    },
+                    {
+                        "type": "file",
+                        "description": "File",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -378,7 +385,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.CreatePostRequest": {
+        "models.CreatePost": {
             "type": "object",
             "required": [
                 "content",

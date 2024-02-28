@@ -1,5 +1,5 @@
 definitions:
-  models.CreatePostRequest:
+  models.CreatePost:
     properties:
       content:
         type: string
@@ -174,7 +174,12 @@ paths:
         name: post
         required: true
         schema:
-          $ref: '#/definitions/models.CreatePostRequest'
+          $ref: '#/definitions/models.CreatePost'
+      - description: File
+        in: formData
+        name: file
+        required: true
+        type: file
       produces:
       - application/json
       responses:
