@@ -33,12 +33,15 @@ func NewPostController(DB *gorm.DB) PostController {
 func (pc *PostController) CreatePost(ctx *gin.Context) {
 	user := ctx.MustGet("User").(models.User)
 
-	formfile, _, err := ctx.Request.FormFile("file")
+	file, _, err := ctx.Request.FormFile("file")
+
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "File is not provided."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "No file is provided",
+		})
 		return
 	}
-	uploadUrl, err := services.NewMediaUpload().FileUpload(models.File{File: formfile})
+	uploadUrl, err := services.UploadHelper(file)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "File upload is failed."})
 		return
