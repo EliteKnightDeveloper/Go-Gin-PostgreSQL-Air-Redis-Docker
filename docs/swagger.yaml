@@ -28,6 +28,8 @@ definitions:
         type: string
       created_at:
         type: string
+      file:
+        type: string
       id:
         type: string
       title:
@@ -141,6 +143,17 @@ paths:
   /api/v1/posts:
     get:
       description: Get post lists with user info
+      parameters:
+      - description: Page size
+        in: query
+        name: size
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -232,6 +245,17 @@ paths:
   /api/v1/posts/all:
     get:
       description: Get all post lists with user info
+      parameters:
+      - description: Page size
+        in: query
+        name: size
+        required: true
+        type: integer
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: integer
       produces:
       - application/json
       responses:

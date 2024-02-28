@@ -30,7 +30,7 @@ func NewPostController(DB *gorm.DB) PostController {
 // @Success      200   {object}  models.Post
 // @Router       /api/v1/posts [post]
 func (pc *PostController) CreatePost(ctx *gin.Context) {
-	User := ctx.MustGet("User").(models.User)
+	user := ctx.MustGet("User").(models.User)
 
 	formfile, _, err := ctx.Request.FormFile("file")
 	if err != nil {
@@ -43,18 +43,20 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 		return
 	}
 
-	var payload *models.CreatePostRequest
-
-	if err := ctx.ShouldBindJSON(&payload); err != nil {
-		ctx.JSON(http.StatusBadRequest, err.Error())
-		return
+	content := ctx.Query("content")
+	if content == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Content is not provided."})
+	}
+	title := ctx.Query("title")
+	if title == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Title is not provided."})
 	}
 
 	now := time.Now()
 	newPost := models.Post{
-		Title:     payload.Title,
-		Content:   payload.Content,
-		User:      User.ID,
+		Title:     content,
+		Content:   title,
+		User:      user.ID,
 		CreatedAt: now,
 		UpdatedAt: now,
 		File:      uploadUrl,
@@ -79,12 +81,22 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 // @Tags         Post
 // @Produce      json
 // @Success      200  {array}  models.Post
+// @Param   	 size query string true "Page size"
+// @Param   	 page query string true "Page"
 // @Router       /api/v1/posts [get]
 func (pc *PostController) GetPosts(ctx *gin.Context) {
 	User := ctx.MustGet("User").(models.User)
 
-	size, _ := strconv.Atoi(ctx.Query("size"))
-	page, _ := strconv.Atoi(ctx.Query("page"))
+	size, err := strconv.Atoi(ctx.Query("size"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Page size is not provided."})
+		return
+	}
+	page, err := strconv.Atoi(ctx.Query("page"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Page number is not provided."})
+		return
+	}
 
 	var postList []models.PostList
 	results := pc.DB.Table("posts").Select("posts.id, posts.title, posts.content,posts.updated_at, users.email, users.id as user").Joins("left join users on posts.user = users.id").Where("posts.user = ?", User.ID).Offset((page - 1) * size).Limit(size).Order("updated_at").Scan(&postList)
@@ -110,16 +122,18 @@ func (pc *PostController) GetPosts(ctx *gin.Context) {
 // @Tags         Post
 // @Produce      json
 // @Success      200  {array}  models.Post
+// @Param   	 size query int true "Page size"
+// @Param   	 page query int true "Page"
 // @Router       /api/v1/posts/all [get]
 func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 	size, err := strconv.Atoi(ctx.Query("size"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page size is not provided."})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Page size is not provided."})
 		return
 	}
 	page, err := strconv.Atoi(ctx.Query("page"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page number is not provided."})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Page number is not provided."})
 		return
 	}
 
@@ -153,7 +167,7 @@ func (pc *PostController) GetAllPosts(ctx *gin.Context) {
 // @Router       /api/v1/posts/{postId} [put]
 func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	postId := ctx.Param("postId")
-	User := ctx.MustGet("User").(models.User)
+	user := ctx.MustGet("User").(models.User)
 
 	var payload *models.UpdatePost
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -170,7 +184,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 	postToUpdate := models.Post{
 		Title:     payload.Title,
 		Content:   payload.Content,
-		User:      User.ID,
+		User:      user.ID,
 		CreatedAt: updatedPost.CreatedAt,
 		UpdatedAt: now,
 	}
@@ -185,7 +199,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 // @Description	 Get a post
 // @Tags         Post
 // @Produce      json
-// @Param   		 postId path string true "ID of the entry to be retrived"
+// @Param   	 postId path string true "ID of the entry to be retrived"
 // @Success      200
 // @Router       /api/v1/posts/{postId} [get]
 func (pc *PostController) GetPostById(ctx *gin.Context) {
@@ -206,7 +220,7 @@ func (pc *PostController) GetPostById(ctx *gin.Context) {
 // @Description	 Delete a post
 // @Tags         Post
 // @Produce      json
-// @Param   	 	 postId path string true "ID of the entry to be deleted"
+// @Param   	 postId path string true "ID of the entry to be deleted"
 // @Success      200
 // @Router       /api/v1/posts/{postId} [delete]
 func (pc *PostController) DeletePost(ctx *gin.Context) {

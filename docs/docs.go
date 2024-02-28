@@ -121,6 +121,22 @@ const docTemplate = `{
                     "Post"
                 ],
                 "summary": "Get post lists with user info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -173,6 +189,22 @@ const docTemplate = `{
                     "Post"
                 ],
                 "summary": "Get all post lists with user info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -388,6 +420,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "created_at": {
+                    "type": "string"
+                },
+                "file": {
                     "type": "string"
                 },
                 "id": {
