@@ -1,4 +1,4 @@
-package utils
+package services
 
 import (
 	"GO-GIN-AIR-POSTGRESQL-DOCKER/initializers"
