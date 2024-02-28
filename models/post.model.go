@@ -16,7 +16,7 @@ type Post struct {
 	File      string    `gorm:"not null" json:"file,omitempty"`
 }
 
-type CreatePostRequest struct {
+type CreatePost struct {
 	Title   string `json:"title"  binding:"required"`
 	Content string `json:"content" binding:"required"`
 }

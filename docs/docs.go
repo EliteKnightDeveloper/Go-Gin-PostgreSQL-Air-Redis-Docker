@@ -121,6 +121,22 @@ const docTemplate = `{
                     "Post"
                 ],
                 "summary": "Get post lists with user info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -149,8 +165,15 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreatePostRequest"
+                            "$ref": "#/definitions/models.CreatePost"
                         }
+                    },
+                    {
+                        "type": "file",
+                        "description": "File",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -173,6 +196,22 @@ const docTemplate = `{
                     "Post"
                 ],
                 "summary": "Get all post lists with user info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -346,7 +385,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.CreatePostRequest": {
+        "models.CreatePost": {
             "type": "object",
             "required": [
                 "content",
@@ -388,6 +427,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "created_at": {
+                    "type": "string"
+                },
+                "file": {
                     "type": "string"
                 },
                 "id": {

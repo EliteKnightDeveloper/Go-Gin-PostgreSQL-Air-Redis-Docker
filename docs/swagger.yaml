@@ -1,5 +1,5 @@
 definitions:
-  models.CreatePostRequest:
+  models.CreatePost:
     properties:
       content:
         type: string
@@ -27,6 +27,8 @@ definitions:
       content:
         type: string
       created_at:
+        type: string
+      file:
         type: string
       id:
         type: string
@@ -141,6 +143,17 @@ paths:
   /api/v1/posts:
     get:
       description: Get post lists with user info
+      parameters:
+      - description: Page size
+        in: query
+        name: size
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -161,7 +174,12 @@ paths:
         name: post
         required: true
         schema:
-          $ref: '#/definitions/models.CreatePostRequest'
+          $ref: '#/definitions/models.CreatePost'
+      - description: File
+        in: formData
+        name: file
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -232,6 +250,17 @@ paths:
   /api/v1/posts/all:
     get:
       description: Get all post lists with user info
+      parameters:
+      - description: Page size
+        in: query
+        name: size
+        required: true
+        type: integer
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
